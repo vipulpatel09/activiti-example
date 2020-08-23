@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+        xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+        xmlns:activiti="http://activiti.org/bpmn"
+        targetNamespace="Activiti Practice Process">
+
+    <!-- Defining the Process -->
+    <process id="sampleProcess" name="Sample BPM Process">
+        <startEvent id="theStart"/>
+
+        <!-- Defining flow path -->
+        <sequenceFlow id="flow1" sourceRef="theStart" targetRef="javaUpperCaseService"/>
+        <!-- Specify the java class which needs to be executed for this service task -->
+        <serviceTask id="javaUpperCaseService" name="Java service invocation"
+                     activiti:class="com.activiti.practice.bpm.services.ToUpperCaseDelegate">
+        </serviceTask>
+
+        <sequenceFlow id="flow2" sourceRef="javaUpperCaseService" targetRef="theScriptTask"/>
+        <!-- Specify the script format as groovy -->
+        <scriptTask id="theScriptTask" name="Groovy script Task" scriptFormat="groovy">
+            <script>
+                <!-- As groovy based on Java platform, you can use java classes and objects in groovy scripts-->
+                <!-- Import java class which needs to be used-->
+                import com.activiti.practice.bpm.services.UserModel;
+
+                <!--  Execution variables that are passes during start of process or -->
+                <!--  set by any service or script task can be accessed as follows -->
+
+                def upperCaseText = execution.getVariable("upperCaseText");
+                execution.setVariable("scriptText", "This text was set by groovy script")
+                println '\n' + upperCaseText
+
+                <!-- Initialize user model -->
+                UserModel userModel = new UserModel();
+                userModel.setFirstName("John");
+                userModel.setLastName("Doe");
+
+                <!-- By default scripts have the access to all the spring beans -->
+                <!-- and can be accessed as needed (bean or bean method) -->
+                printerUseCase.printUserDetails(userModel);
+
+                println 'Groovy Script Ended \n'
+            </script>
+        </scriptTask>
+
+        <sequenceFlow id="flow3" sourceRef="theScriptTask" targetRef="javaBeanPrintService"/>
+        <!-- Specify the spring bean method which needs to be executed for this service task -->
+        <!-- execution is available throughout all the service tasks of same process-->
+        <serviceTask id="javaBeanPrintService" name="Java service bean invocation"
+                     activiti:expression="#{printerUseCase.printMessage(execution,'Message from service task')}">
+        </serviceTask>
+
+        <sequenceFlow id="flow5" sourceRef="javaBeanPrintService" targetRef="theEnd"/>
+        <endEvent id="theEnd" name="End service invocation"/>
+    </process>
+
+</definitions>
