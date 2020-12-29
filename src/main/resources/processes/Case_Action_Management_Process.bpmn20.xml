@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef">
+    <process id="caseActionManagement" name="Case Action Management" isExecutable="true">
+        <startEvent id="startEvent" name="Start"></startEvent>
+        <scriptTask id="stateMapScriptTask" name="States Script Task" scriptFormat="groovy">
+            <script><![CDATA[def states = [:];
+
+states["open"] = [
+        "en": "Open",
+        "es": "Open"
+]
+
+
+println 'Case Action Called '
+println states
+println this
+execution.setVariable("states",states);]]></script>
+        </scriptTask>
+        <endEvent id="sid-FABF9D34-12E4-4C15-B7C8-7BD00F26AF1F"></endEvent>
+        <sequenceFlow id="sid-231248B3-D98C-430F-9AC3-46F9073C2479" sourceRef="stateMapScriptTask"
+                      targetRef="sid-FABF9D34-12E4-4C15-B7C8-7BD00F26AF1F"></sequenceFlow>
+        <sequenceFlow id="sid-60572282-ED82-4C71-ADD0-8C26D9F67299" sourceRef="startEvent"
+                      targetRef="stateMapScriptTask"></sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_caseActionManagement">
+        <bpmndi:BPMNPlane bpmnElement="caseActionManagement" id="BPMNPlane_caseActionManagement">
+            <bpmndi:BPMNShape bpmnElement="startEvent" id="BPMNShape_startEvent">
+                <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="145.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="stateMapScriptTask" id="BPMNShape_stateMapScriptTask">
+                <omgdc:Bounds height="80.0" width="100.0" x="255.0" y="120.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-FABF9D34-12E4-4C15-B7C8-7BD00F26AF1F"
+                              id="BPMNShape_sid-FABF9D34-12E4-4C15-B7C8-7BD00F26AF1F">
+                <omgdc:Bounds height="28.0" width="28.0" x="480.0" y="146.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-60572282-ED82-4C71-ADD0-8C26D9F67299"
+                             id="BPMNEdge_sid-60572282-ED82-4C71-ADD0-8C26D9F67299">
+                <omgdi:waypoint x="130.0" y="160.0"></omgdi:waypoint>
+                <omgdi:waypoint x="255.0" y="160.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-231248B3-D98C-430F-9AC3-46F9073C2479"
+                             id="BPMNEdge_sid-231248B3-D98C-430F-9AC3-46F9073C2479">
+                <omgdi:waypoint x="355.0" y="160.0"></omgdi:waypoint>
+                <omgdi:waypoint x="480.0" y="160.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

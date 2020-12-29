@@ -3,6 +3,7 @@ package com.activiti.practice.bpm.controller;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,10 @@ public class BpmTaskController {
     @RequestMapping("/create/process/{processId}")
     public String createProcess(@PathVariable("processId") String processId) {
 
+        if (ObjectUtils.isEmpty(processId)) {
+            return "Process Id Missing";
+        }
+
 //        Process id is defined in activiti-sample-process.bpmn20.xml file, in our case it is sampleProcess
         System.out.println("\n\n" + processId);
 
@@ -32,7 +37,7 @@ public class BpmTaskController {
 //        It will execute all the service tasks and script task as per the defined sequenceFlow
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processId, environmentVariables);
 
-        return processInstance.getProcessInstanceId();
+        return "Instance Created";
     }
 
 
